@@ -73,13 +73,13 @@ function main() {
                     subEntity.appendChild(sphere);
                     var classText = document.createElement("a-text");
                     classText.setAttribute('value', elem.java.className);
-                    classText.setAttribute('position', '0.5 0.0 2.0');
+                    classText.setAttribute('position', '0.5 0.0 0.0');
                     //text.setAttribute('geometry', elem.java.className);
                     subEntity.appendChild(classText);
                     var packageText = document.createElement("a-text");
                     packageText.setAttribute('value', elem.java.pack);
                     packageText.setAttribute('scale', '0.8');
-                    packageText.setAttribute('position', '0.4 0.5 2.0');
+                    packageText.setAttribute('position', '0.4 0.5 0.0');
                     //text.setAttribute('geometry', elem.java.className)
                     subEntity.appendChild(packageText);
 
@@ -129,18 +129,24 @@ function setKeyboard(mainData) {
         }
 
         if (key == 222) {
-            var ruleIndex = ruleTypes.indexOf(globalData.displayedRules);
-            ruleIndex = ruleIndex + 1;
-            if (ruleIndex >= ruleTypes.length) {
-                ruleIndex = 0;
-            }
-            globalData.displayedRules = ruleTypes[ruleIndex];
-            updateSpheres();
+            nextViolation();
         }
         console.log(key);
     }
 }
 
+function nextViolation() {
+    var ruleIndex = ruleTypes.indexOf(globalData.displayedRules);
+    ruleIndex = ruleIndex + 1;
+    if (ruleIndex >= ruleTypes.length) {
+        ruleIndex = 0;
+    }
+    globalData.displayedRules = ruleTypes[ruleIndex];
+    updateSpheres();
+    var editor = document.getElementById("violationText");
+    editor.setAttribute("value", globalData.displayedRules +" violations");
+
+}
 
 function drawEdit(mainData) {
     if (mainData.edited) {

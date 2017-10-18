@@ -15,6 +15,7 @@ AFRAME.registerComponent('grab', {
         // Bind event handlers
         this.onHit = this.onHit.bind(this);
         this.onGripOpen = this.onGripOpen.bind(this);
+        this.onTriggerClose= this.onTriggerClose.bind(this);
         this.onGripClose = this.onGripClose.bind(this);
         console.log("grabbing init");
     },
@@ -22,8 +23,9 @@ AFRAME.registerComponent('grab', {
     play: function () {
         var el = this.el;
         el.addEventListener('hitstart', this.onHit);
-        el.addEventListener('gripclose', this.onGripClose);
-        el.addEventListener('gripopen', this.onGripOpen);
+        el.addEventListener('gripdown', this.onGripClose);
+        el.addEventListener('triggerdown', this.onTriggerClose);
+        el.addEventListener('gripup', this.onGripOpen);
         el.addEventListener('thumbup', this.onGripClose);
         el.addEventListener('thumbdown', this.onGripOpen);
         el.addEventListener('pointup', this.onGripClose);
@@ -34,8 +36,9 @@ AFRAME.registerComponent('grab', {
     pause: function () {
         var el = this.el;
         el.removeEventListener('hit', this.onHit);
-        el.removeEventListener('gripclose', this.onGripClose);
-        el.removeEventListener('gripopen', this.onGripOpen);
+        el.removeEventListener('gripdown', this.onGripClose);
+        el.removeEventListener('gripup', this.onGripOpen);
+        el.removeEventListener('triggerdown', this.onTriggerClose);
         el.removeEventListener('thumbup', this.onGripClose);
         el.removeEventListener('thumbdown', this.onGripOpen);
         el.removeEventListener('pointup', this.onGripClose);
@@ -43,13 +46,21 @@ AFRAME.registerComponent('grab', {
         el.addEventListener('trackpaddown', this.onTrackpadUp);
     },
 
-    onGripClose: function (evt) {
+    onTriggerClose: function (evt) {
         this.grabbing = true;
         delete this.previousPosition;
-        console.log("grip close");
+
         globalData.edited = true;
         drawEdit(globalData);
+        console.log("trigger close");
+    },
+
+
+    onGripClose: function (evt) {
+
             //toVector3 ? (threejs)
+        console.log("grip close");
+        nextViolation();
     },
 
     onGripOpen: function (evt) {
@@ -131,7 +142,7 @@ function updateCamera() {
     var camera = document.getElementById("cameraRig");
     //console.log("cam:"+ JSON.stringify(camera.object3D.position));
     var pos = camera.object3D.position;
-    var scale = -0.1*axisy;
+    var scale = -0.2*axisy;
 
 
 
@@ -148,4 +159,4 @@ function updateCamera() {
     }
 }
 
-setInterval( updateCamera, 50);
+setInterval( updateCamera, 25);
