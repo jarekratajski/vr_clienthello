@@ -1,0 +1,36 @@
+{
+  "name": "hello",
+  "description": "hello.",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "start": "live-server --port=7000",
+    "deploy": "ghpages"
+  },
+  "devDependencies": {
+    "connect-livereload": "^0.6.0",
+    "express": "^4.15.4",
+    "ghpages": "0.0.3",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^3.2.2",
+    "http-proxy-middleware": "^0.17.4",
+    "live-server": "^1.2.0",
+    "merge2": "^1.2.0",
+    "open": "0.0.5",
+    "typescript": "^2.5.2"
+  },
+  "keywords": [
+    "aframe",
+    "aframe-example",
+    "aframe-boilerplate",
+    "aframe-scene",
+    "webvr",
+    "vr"
+  ],
+  "dependencies": {
+    "aframe": "^0.6.1",
+    "aframe-aabb-collider-component": "^1.1.1",
+    "aframe-controller-cursor-component": "^0.2.7",
+    "aframe-html-shader": "^0.2.0"
+  }
+}

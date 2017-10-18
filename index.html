@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>hello</title>
+    <meta name="description" content="hello">
+    <script src="node_modules/aframe/dist/aframe-master.js"></script>
+    <script src="node_modules/aframe-look-at-component/dist/aframe-look-at-component.js"></script>
+    <script src="node_modules/aframe-look-at-component/dist/aframe-text-geometry-component.js"></script>
+   <!-- <script src="node_modules/aframe-aabb-collider-component/dist/aframe-aabb-collider-component.min.js"></script>-->
+    <script src="node_modules/aframe-html-shader/dist/aframe-html-shader.min.js"></script>
+    <script src="node_modules/aframe-aabb-collider-component/index.js"></script>
+  </head>
+  <body>
+    <a-scene id="scene">
+      <a-assets>
+        <!--<img id="groundTexture" src="https://cdn.aframe.io/a-painter/images/floor.jpg">-->
+        <img id="skyTexture" src="stars.jpg">
+      </a-assets>
+
+
+
+      <!-- Primitives. -->
+
+        <!--a-plane position="0 .1 -4" rotation="0 0 0" width="6" height="8" color="#7BC8A4"></a-plane-->
+
+      <!--<a-entity geometry="primitive: plane; width: 20" material="shader: html; target: #htmlElement; fps : 2;"  id="mainText"></a-entity>-->
+      <a-text value="code here"
+              position="0.5 0 0" rotation="0 0 0" height="12"
+              color="white"
+              id="mainText"
+              font="sourcecodepro"
+              tab-size="2"
+              align="left"
+              baseline="top"
+              wrap-count="260"
+              anchor="left"
+              white-space="normal" ></a-text>
+
+      <a-text value="code here"
+              position="0.5 0 0" rotation="0 0 0" height="12"
+              color="red"
+              id="redText"
+              font="sourcecodepro"
+              tab-size="2"
+              align="left"
+              baseline="top"
+              wrap-count="260"
+              anchor="left"
+              white-space="normal" ></a-text>
+
+      <a-text value="code here"
+              position="0.5 0 0.1" rotation="0 0 0" height="12"
+              color="yellow"
+              id="yellowText"
+              font="sourcecodepro"
+              tab-size="2"
+              opacity="0.5"
+              align="left"
+              baseline="top"
+              wrap-count="260"
+              anchor="left"
+              white-space="normal" ></a-text>
+      <!-- Background sky. -->
+      <a-sky height="2048" radius="300" src="#skyTexture" theta-length="180" width="2048" ></a-sky>
+
+      <!-- Ground. -->
+      <!--<a-circle src="#groundTexture" rotation="-90 0 0" radius="132"></a-circle>-->
+
+      <!--Tracked controls. -->
+      <a-entity id="cameraRig">
+        <a-entity hand-controls="left" aabb-collider="objects: .code"  grab></a-entity>
+        <a-entity hand-controls="right" aabb-collider="objects: .code" grab></a-entity>
+        <a-entity camera look-controls wasd-controls="fly:true" tracked-controls>
+        </a-entity>
+
+
+      </a-entity>
+
+
+
+    </a-scene>
+
+
+    <!--div style="width: 1640px; height: 2480px; position: fixed; left: 0; top: 0; z-index: -1; overflow: hidden">
+      <code id="htmlElement" style="background: transparent; color: #333; font-size: 48px">
+        <pre id="codeElement">
+        Hello, HTaML!
+      This is my code
+      To heelll
+      </pre></code>
+    </div>-->
+    <!--
+    <script src="src/grab.js"/>-->
+    <script src="src/grab.js"></script>
+    <script src="src/main.js"></script>
+    <!--<script src="src/aabb-collider.js"></script-->
+
+
+
+  </body>
+</html>
+
+
+
