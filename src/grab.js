@@ -78,10 +78,20 @@ AFRAME.registerComponent('grab', {
 
         var hitEl = evt.detail.intersectedEls[0];
         if (hitEl) {
-            console.log("hit:"+hitEl);
+            /*console.log("hit:"+hitEl);
             console.log("hitI:"+hitEl.myIndex);
-            console.log("hitC:"+hitEl.myCode);
+            console.log("hitC:"+hitEl.myCode);*/
             globalData.editedCnt = hitEl.myIndex;
+            if (globalData.hitted ) {
+                globalData.hitted.setAttribute("wireframe", "false");
+                removeLines(globalData);
+            }
+
+
+            globalData.hitted = hitEl;
+
+            hitEl.setAttribute("wireframe", "true");
+            drawLines(globalData);
         }
 
         // If the element is already grabbed (it could be grabbed by another controller).

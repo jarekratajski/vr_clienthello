@@ -116,10 +116,14 @@ function setKeyboard(mainData) {
         var key = e.keyCode ? e.keyCode : e.which;
 
         if (key == 188) {
+            removeLines(mainData);
+
             mainData.edited = true;
             mainData.editedCnt++;
 
             drawEdit(mainData);
+
+            drawLines(mainData);
         }
         if (key == 190) {
             mainData.edited = true;
@@ -151,11 +155,14 @@ function nextViolation() {
 function drawEdit(mainData) {
     if (mainData.edited) {
 
+        var camera = document.getElementById("cameraRig");
+
         var elementData = mainData.originElements[mainData.editedCnt];
         var key = elementData.java.pack + "/" + elementData.java.className;
         var editor = document.getElementById("mainText");
         var fixedCode = fixText(elementData.java.code)
         var violations = violatedText(fixedCode, elementData.java.violations);
+        var target =editor.object3D.parent.worldToLocal(camera.object3D.getWorldPosition());
 
         editor.setAttribute("value", violations[0]);
         console.log(elementData.java.violations);
@@ -167,9 +174,16 @@ function drawEdit(mainData) {
         var sphere = mainData.spheres[key];
         /*editor.setAttribute("position", "0.5 0 0");
         editorRed.setAttribute("position", "0.5 0 0");*/
+
         sphere.appendChild(editor);
         sphere.appendChild(editorRed);
         sphere.appendChild(editorYel);
+        setTimeout( function() {
+            editor.object3D.lookAt( target);
+            editorRed.object3D.lookAt( target);
+            editorYel.object3D.lookAt( target);
+        },100);
+
     }
 }
 
@@ -255,6 +269,52 @@ function updateSpheres() {
         setSphereColor(elem, codeEntity);
 
 
+    }
+}
+
+function drawLines(mainData) {
+    if (mainData.edited) {
+
+        mainData.imports =[];
+
+        var spheres = mainData.spheres;
+        var elementData = mainData.originElements[mainData.editedCnt];
+        var key = elementData.java.pack + "/" + elementData.java.className;
+        var mainSphere = spheres[key];
+        var mainSpherePos = mainSphere.object3D.position;
+        var imports = elementData.java.imports;
+        imports.map(function (imp ) {
+
+            for ( var k in spheres) {
+                if ( k.replace("/",".")===imp +".java") {
+                    console.log("found:"+k);
+                    var sphere = spheres[k];
+                    var position = sphere.object3D.position.clone();
+                    console.log("found:"+k+"=>"+position);
+
+                    var line  = document.createElement("a-entity");
+                    var newEnd = position.sub(mainSpherePos);
+                    line.setAttribute("line","start: 0, 0, 0; end: "+
+                        newEnd.x +" " + newEnd.y+" " + newEnd.z +"; color: white");
+                    mainSphere.appendChild(line);
+                    mainData.imports.push(line);
+                }
+
+            }
+        } );
+    }
+}
+function removeLines(mainData) {
+    if (mainData.edited) {
+
+
+        var spheres = mainData.spheres;
+        var elementData = mainData.originElements[mainData.editedCnt];
+        var key = elementData.java.pack + "/" + elementData.java.className;
+        var mainSphere = spheres[key];
+        mainData.imports.map( function(imp) {
+            mainSphere.removeChild(imp);
+        });
     }
 }
 
