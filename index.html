@@ -6,7 +6,7 @@
     <meta name="description" content="hello">
     <script src="node_modules/aframe/dist/aframe-master.js"></script>
     <script src="node_modules/aframe-look-at-component/dist/aframe-look-at-component.js"></script>
-    <script src="node_modules/aframe-source-editor/dist/aframe-source-editor.dev.js"></script>
+
 
     <!--script src="node_modules/aframe-look-at-component/dist/aframe-text-geometry-component.js"></script-->
    <!-- <script src="node_modules/aframe-aabb-collider-component/dist/aframe-aabb-collider-component.min.js"></script>-->
@@ -76,7 +76,7 @@
 
       </a-entity>
 
-      <source-editor value="whatever"></source-editor>
+
 
 
       <!--Tracked controls. -->
@@ -86,6 +86,7 @@
         </a-entity>
         <a-entity hand-controls="right" aabb-collider="objects: .code, .letter" grab>
           <a-text value="" rotation="0 0 90" position="-0.5 0.2 0" scale="0.5 0.5 0.5" color="#0000ff" id="selectedLetter"></a-text>
+          <a-entity raycaster="objects: .code; showLine:true" position="0 0 0" rotation="0 0 0" showLine="true"></a-entity>
         </a-entity>
         <a-entity camera look-controls wasd-controls="fly:true" tracked-controls>
         </a-entity>
