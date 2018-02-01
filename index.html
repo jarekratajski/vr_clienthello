@@ -6,7 +6,9 @@
     <meta name="description" content="hello">
     <script src="node_modules/aframe/dist/aframe-master.js"></script>
     <script src="node_modules/aframe-look-at-component/dist/aframe-look-at-component.js"></script>
-    <script src="node_modules/aframe-look-at-component/dist/aframe-text-geometry-component.js"></script>
+    <script src="node_modules/aframe-source-editor/dist/aframe-source-editor.dev.js"></script>
+
+    <!--script src="node_modules/aframe-look-at-component/dist/aframe-text-geometry-component.js"></script-->
    <!-- <script src="node_modules/aframe-aabb-collider-component/dist/aframe-aabb-collider-component.min.js"></script>-->
     <script src="node_modules/aframe-html-shader/dist/aframe-html-shader.min.js"></script>
     <script src="node_modules/aframe-aabb-collider-component/index.js"></script>
@@ -53,7 +55,7 @@
               white-space="normal" ></a-text>
 
       <a-text value="code here"
-              position="0.5 0 0.1" rotation="0 0 0" height="12"
+              position="-1.5 0 0.1" rotation="0 0 0" height="12"
               color="yellow"
               id="yellowText"
               font="sourcecodepro"
@@ -70,20 +72,23 @@
 
       <!-- Ground. -->
       <!--<a-circle src="#groundTexture" rotation="-90 0 0" radius="132"></a-circle>-->
+      <a-entity id="keyboardCube" position="0 0 0" scale="0.1 0.1 0.1">
+
+      </a-entity>
+
+      <source-editor value="whatever"></source-editor>
+
 
       <!--Tracked controls. -->
       <a-entity id="cameraRig">
-        <a-entity hand-controls="left" aabb-collider="objects: .code"  grab>
+        <a-entity hand-controls="left" aabb-collider="objects: .code, .letter"  grab>
           <a-text value="all violations" position="-0.5 0.2 0" scale="0.5 0.5 0.5" color="#ff0000" id="violationText"></a-text>
         </a-entity>
-        <a-entity hand-controls="right" aabb-collider="objects: .code" grab>
-
-
+        <a-entity hand-controls="right" aabb-collider="objects: .code, .letter" grab>
+          <a-text value="" rotation="0 0 90" position="-0.5 0.2 0" scale="0.5 0.5 0.5" color="#0000ff" id="selectedLetter"></a-text>
         </a-entity>
         <a-entity camera look-controls wasd-controls="fly:true" tracked-controls>
         </a-entity>
-
-
       </a-entity>
 
 

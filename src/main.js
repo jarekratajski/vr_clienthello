@@ -27,6 +27,7 @@ function fixCol(aCol) {
 
 function main() {
 
+    drawKeyCube();
     fetch("services/code").then(function (response) {
         response.text().then(function (value) {
 
@@ -273,17 +274,25 @@ function updateSpheres() {
 }
 
 function drawLines(mainData) {
-    if (mainData.edited) {
+    if (true) {
 
         mainData.imports =[];
+
 
         var spheres = mainData.spheres;
         var elementData = mainData.originElements[mainData.editedCnt];
         var key = elementData.java.pack + "/" + elementData.java.className;
         var mainSphere = spheres[key];
+        if (  mainSphere.hittedCnt === mainData.editedCnt) {
+            console.log("sorry - same");
+              return;
+        }
         var mainSpherePos = mainSphere.object3D.position;
         var imports = elementData.java.imports;
-        imports.map(function (imp ) {
+        mainData.importing = mainSphere;
+        mainSphere.hittedCnt = mainData.editedCnt;
+
+            imports.map(function (imp ) {
 
             for ( var k in spheres) {
                 if ( k.replace("/",".")===imp +".java") {
@@ -305,18 +314,56 @@ function drawLines(mainData) {
     }
 }
 function removeLines(mainData) {
-    if (mainData.edited) {
+    if (mainData.importing) {
 
 
-        var spheres = mainData.spheres;
-        var elementData = mainData.originElements[mainData.editedCnt];
-        var key = elementData.java.pack + "/" + elementData.java.className;
-        var mainSphere = spheres[key];
-        mainData.imports.map( function(imp) {
-            mainSphere.removeChild(imp);
-        });
+        //var spheres = mainData.spheres;
+        //var elementData = mainData.originElements[mainData.editedCnt];
+        //var key = elementData.java.pack + "/" + elementData.java.className;
+        var mainSphere = mainData.importing;
+        if (mainData.imports) {
+            mainData.imports.map(function (imp) {
+                mainSphere.removeChild(imp);
+            });
+        }
     }
 }
+
+function drawKeyCube() {
+    var allLetters = "qwertyuiopasdfghjklzxcvbnm".split('');
+
+    var cube = document.getElementById("keyboardCube");
+    for ( var x =0 ; x < 4 ; x++) {
+
+        for ( var y =0 ; y < 4 ; y++) {
+            for ( var z =0 ; z < 4 ; z++) {
+                   var lettterCube = document.createElement("a-box");
+                   lettterCube.setAttribute("position", x + " "+ y + " " +z);
+                   lettterCube.setAttribute("color", "#00ff00");
+                lettterCube.setAttribute("width", "0.9");
+                lettterCube.setAttribute("height", "0.9");
+                lettterCube.setAttribute("depth", "0.9");
+                lettterCube.setAttribute("class", "letter");
+
+                   lettterCube.setAttribute("material","transparent: true; opacity: 0.6");
+
+                    var nextLetter = allLetters.shift();
+                    if ( nextLetter) {
+                        var letterText = document.createElement("a-text");
+                        letterText.setAttribute("value", nextLetter);
+                        letterText.setAttribute("look-at", "[camera]");
+                        lettterCube.aLetter = nextLetter;
+                        lettterCube.appendChild(letterText);
+                    }
+                   cube.appendChild(lettterCube);
+            }
+        }
+    }
+
+
+}
+
+
 
 main();
 
