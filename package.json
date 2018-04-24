@@ -28,7 +28,7 @@
     "vr"
   ],
   "dependencies": {
-    "aframe": "^0.6.1",
+    "aframe": "0.6.1",
     "aframe-aabb-collider-component": "^1.1.1",
     "aframe-controller-cursor-component": "^0.2.7",
     "aframe-html-shader": "^0.2.0"

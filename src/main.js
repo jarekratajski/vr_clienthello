@@ -4,7 +4,7 @@ console.log("ok");
 var globalData = {};
 
 var ruleTypes = [
-    "all", "cc"
+    "all", "cc", "ncss","lod"
 ];
 
 function update(mainData, allElements) {
@@ -27,7 +27,7 @@ function fixCol(aCol) {
 
 function main() {
 
-    drawKeyCube();
+
     fetch("services/code").then(function (response) {
         response.text().then(function (value) {
 
@@ -60,7 +60,7 @@ function main() {
                     var scaleFact = (Math.log(size / 20) + 0.1) / 20;
 
 
-                    var sphere = document.createElement("a-plane");
+                    var sphere = document.createElement("a-box");
                     sphere.myIndex = index;
                     sphere.myCode = elem.java;
                     sphere.className = "code";
@@ -153,6 +153,32 @@ function nextViolation() {
 
 }
 
+function currentViolation() {
+    return globalData.displayedRules;
+}
+
+function violationDict(shortName) {
+    var dict = {
+            'cc' : 'CyclomaticComplexity',
+            'lod' : 'LawOfDemeter',
+            'ncss' : 'NcssMethodCount',
+            'all' : null
+    } ;
+    return dict[shortName];
+}
+
+
+function censorViolations(elementViolations) {
+   var violationName = violationDict(currentViolation());
+   if ( violationName) {
+        return elementViolations.filter( function (el) {
+                return el.rule === violationName;
+        })
+   } else {
+       return elementViolations;
+   }
+}
+
 function drawEdit(mainData) {
     if (mainData.edited) {
 
@@ -162,11 +188,12 @@ function drawEdit(mainData) {
         var key = elementData.java.pack + "/" + elementData.java.className;
         var editor = document.getElementById("mainText");
         var fixedCode = fixText(elementData.java.code)
-        var violations = violatedText(fixedCode, elementData.java.violations);
+        var violations = violatedText(fixedCode, censorViolations(elementData.java.violations));
         var target =editor.object3D.parent.worldToLocal(camera.object3D.getWorldPosition());
 
         editor.setAttribute("value", violations[0]);
-        console.log(elementData.java.violations);
+
+
         var editorRed = document.getElementById("redText");
         var editorYel = document.getElementById("yellowText");
 
@@ -189,6 +216,7 @@ function drawEdit(mainData) {
 }
 
 function givenViolation(line, violations) {
+    var realLine = line+1;
     for (var v = 0; v < violations.length; v++) {
         var violation = violations[v];
         if (line >= violation.beginLine && line <= violation.endLine) {
@@ -201,9 +229,9 @@ function givenViolation(line, violations) {
 
 function violatedText(original, violations) {
     var lines = original.split("\n");
-    var normResult = "";
-    var redResult = "";
-    var violResult = "";
+    var normResult = "|\n";
+    var redResult = "|\n";
+    var violResult = "|\n";
     for (var line = 0; line < lines.length; line++) {
         var violation = givenViolation(line, violations);
         if (violation) {
@@ -233,22 +261,32 @@ function fixText(original) {
 
 function calcViolation(javaElem, violationType) {
     if (violationType === "cc") {
-        var total = 0;
-        for (v in javaElem.violations) {
-            var violation = javaElem.violations[v];
-            var value = violation.value;
-            var valueFixed = Math.max(value - 6, 0);
-            var valueSQ = valueFixed * valueFixed;
-            total += valueSQ;
-
-
-        }
-        var maxViolation = Math.min(30, total);
-        return maxViolation / 30.0;
+        return calcNamedViolation(javaElem, 'CyclomaticComplexity', 6, 30);
+    } else if (violationType === "lod") {
+        return calcNamedViolation(javaElem, 'LawOfDemeter', 0, 30);
+    }else if (violationType === "ncss") {
+        return calcNamedViolation(javaElem, 'NcssMethodCount', 50, 100);
     } else {
         return Math.min(javaElem.violations.length / 10.0, 1.0);
     }
 }
+
+function calcNamedViolation(javaElem, violationRuleName, acceptableLevel, maxAdded) {
+    var total = 0;
+    for (v in javaElem.violations) {
+        var violation = javaElem.violations[v];
+        if ( violation.rule === violationRuleName) {
+            var value = violation.value;
+            var valueFixed = Math.max(value - acceptableLevel, 0);
+            var valueSQ = valueFixed * valueFixed;
+            total += valueSQ;
+        }
+    }
+    var maxViolation = Math.min(maxAdded, total);
+    return maxViolation / maxAdded;
+}
+
+
 
 function setSphereColor(elem, sphere) {
     var violation = calcViolation(elem.java, globalData.displayedRules);
@@ -329,39 +367,7 @@ function removeLines(mainData) {
     }
 }
 
-function drawKeyCube() {
-    var allLetters = "qwertyuiopasdfghjklzxcvbnm".split('');
 
-    var cube = document.getElementById("keyboardCube");
-    for ( var x =0 ; x < 4 ; x++) {
-
-        for ( var y =0 ; y < 4 ; y++) {
-            for ( var z =0 ; z < 4 ; z++) {
-                   var lettterCube = document.createElement("a-box");
-                   lettterCube.setAttribute("position", x + " "+ y + " " +z);
-                   lettterCube.setAttribute("color", "#00ff00");
-                lettterCube.setAttribute("width", "0.9");
-                lettterCube.setAttribute("height", "0.9");
-                lettterCube.setAttribute("depth", "0.9");
-                lettterCube.setAttribute("class", "letter");
-
-                   lettterCube.setAttribute("material","transparent: true; opacity: 0.6");
-
-                    var nextLetter = allLetters.shift();
-                    if ( nextLetter) {
-                        var letterText = document.createElement("a-text");
-                        letterText.setAttribute("value", nextLetter);
-                        letterText.setAttribute("look-at", "[camera]");
-                        lettterCube.aLetter = nextLetter;
-                        lettterCube.appendChild(letterText);
-                    }
-                   cube.appendChild(lettterCube);
-            }
-        }
-    }
-
-
-}
 
 
 
